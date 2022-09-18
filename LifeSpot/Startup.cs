@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
 namespace LifeSpot
@@ -24,12 +25,21 @@ namespace LifeSpot
             }
 
             app.UseRouting();
-
+            
+            // альтернатива методам-расширениям для роутинга статических файлов
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(env.ContentRootPath, "Static")),
+                RequestPath = "/Static"
+            });
+            
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapCss();
-                endpoints.MapJavaScript();
+                //endpoints.MapCss();
+                //endpoints.MapJavaScript();
                 endpoints.MapHtml();
+                //endpoints.MapImg(); // почему-то не работает для изображений
             });
         }
     }

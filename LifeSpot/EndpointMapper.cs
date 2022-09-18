@@ -46,6 +46,7 @@ namespace LifeSpot
         {
             var footer = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Views", "Shared", "footer.html"));
             var sidebar = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Views", "Shared", "sidebar.html"));
+            var slider = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Views", "Shared", "slider.html"));
 
             builder.MapGet("/", async context =>
             {
@@ -76,10 +77,26 @@ namespace LifeSpot
 
                 var html = new StringBuilder(await File.ReadAllTextAsync(viewPath))
                     .Replace("<!--SIDEBAR-->", sidebar)
-                    .Replace("<!--FOOTER-->", footer);
+                    .Replace("<!--FOOTER-->", footer)
+                    .Replace("<!--SLIDER-->", slider);
 
                 await context.Response.WriteAsync(html.ToString());
             });
+        }
+        
+        public static void MapImg(this IEndpointRouteBuilder builder)
+        {
+            var imgFiles = new[] { "london.jpg", "ny.jpg", "spb.jpg" };
+
+            foreach (var fileName in imgFiles)
+            {
+                builder.MapGet($"/Static/IMG/{fileName}", async context =>
+                {
+                    var imgPath = Path.Combine(Directory.GetCurrentDirectory(), "Static", "IMG", fileName);
+                    var img = await File.ReadAllTextAsync(imgPath);
+                    await context.Response.WriteAsync(img);
+                });
+            }
         }
     }
 }

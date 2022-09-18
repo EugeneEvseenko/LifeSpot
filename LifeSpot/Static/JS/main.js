@@ -1,5 +1,5 @@
 ﻿window.sessionStorage = {};
-handleSession();
+//handleSession();
 
 function logSession() {
     console.log('Начало сессии: ' + window.sessionStorage.getItem("startDate"))
